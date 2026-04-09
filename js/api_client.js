@@ -569,14 +569,14 @@ const API_CLIENT = (() => {
   // 无需本地代理、无需 API Key 配置
 
   // 智能抠图 API 地址
-  // 部署到 Cloudflare Workers 后，将此地址改为你的 Worker URL + '/api/remove-bg'
-  // 例如: 'https://fashion-studio-api.yourname.workers.dev/api/remove-bg'
+  // 部署到 Cloudflare Workers 后，使用以下地址
+  // Cloudflare Worker: https://fashion-studio-api.07a587f6f96d973c7b133777c5b280ed.workers.dev/api/remove-bg
   const REMOVE_BG_API = (function() {
     // 优先从 localStorage 读取（用户可自定义）
     const saved = localStorage.getItem('fs_remove_bg_api');
     if (saved) return saved;
-    // 默认值：同源部署时使用相对路径
-    return '/api/remove-bg';
+    // 默认值：Cloudflare Worker 代理
+    return 'https://fashion-studio-api.07a587f6f96d973c7b133777c5b280ed.workers.dev/api/remove-bg';
   })();
 
   // 智能抠图主方法 - 调用线上 Serverless Function
