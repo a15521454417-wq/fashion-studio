@@ -1227,7 +1227,8 @@
       onSelect: (id, pos) => {
         if (!pos || pos.zPositive === false) return; // Don't select back positions
         S.subType.mainLight = { id: pos.id, x: pos.x, y: pos.y, z: pos.z, label: pos.label };
-        $('mainLightName').textContent = pos.label || '未设置';
+        const mainLightNameEl = $('mainLightName');
+        if (mainLightNameEl) mainLightNameEl.textContent = pos.label || '未设置';
         document.querySelectorAll('.lighting-preset-btn').forEach(b => b.classList.remove('active'));
         updateLightingPrompt();
       }
@@ -1235,7 +1236,10 @@
 
     if (savedId !== 'front') {
       const pos = positions.find(p => p.id === savedId);
-      if (pos) $('mainLightName').textContent = pos.label || '未设置';
+      if (pos) {
+        const el = $('mainLightName');
+        if (el) el.textContent = pos.label || '未设置';
+      }
     }
   }
 
@@ -1350,7 +1354,8 @@
         const pos = LIGHT_POSITIONS_3D.find(p => p.id === posId && p.zPositive !== false);
         if (pos) {
           S.subType.mainLight = { id: pos.id, x: pos.x, y: pos.y, z: pos.z, label: pos.label };
-          $('mainLightName').textContent = pos.label;
+          const el = $('mainLightName');
+          if (el) el.textContent = pos.label;
           if (mainBall3D) mainBall3D.setSelected(pos.id);
         }
         updateLightingPrompt();
@@ -2336,8 +2341,10 @@ ${cameraSnippet}
         const mode = S.wan.videoMode || 't2v';
 
         // 更新加载文案
-        $('loadingText').textContent = '视频生成中，请耐心等待...';
-        $('loadingSub').textContent = '预计 1-5 分钟';
+        const loadingTextEl = $('loadingText');
+        const loadingSubEl = $('loadingSub');
+        if (loadingTextEl) loadingTextEl.textContent = '视频生成中，请耐心等待...';
+        if (loadingSubEl) loadingSubEl.textContent = '预计 1-5 分钟';
 
         let videoResult;
         if (mode === 'i2v' && refs.length > 0) {
@@ -2352,7 +2359,7 @@ ${cameraSnippet}
             onProgress: (status, elapsed) => {
               const mins = Math.floor(elapsed / 60);
               const secs = elapsed % 60;
-              $('loadingSub').textContent = status === 'RUNNING'
+              if (loadingSubEl) loadingSubEl.textContent = status === 'RUNNING'
                 ? `已等待 ${mins}:${secs.toString().padStart(2, '0')}，视频渲染中...`
                 : `已等待 ${mins}:${secs.toString().padStart(2, '0')}，排队中...`;
             }
@@ -2369,7 +2376,7 @@ ${cameraSnippet}
             onProgress: (status, elapsed) => {
               const mins = Math.floor(elapsed / 60);
               const secs = elapsed % 60;
-              $('loadingSub').textContent = status === 'RUNNING'
+              if (loadingSubEl) loadingSubEl.textContent = status === 'RUNNING'
                 ? `已等待 ${mins}:${secs.toString().padStart(2, '0')}，视频渲染中...`
                 : `已等待 ${mins}:${secs.toString().padStart(2, '0')}，排队中...`;
             }
@@ -2377,8 +2384,8 @@ ${cameraSnippet}
         }
 
         // 恢复加载文案
-        $('loadingText').textContent = '正在生成，请稍候...';
-        $('loadingSub').textContent = '预计 10-30 秒';
+        if (loadingTextEl) loadingTextEl.textContent = '正在生成，请稍候...';
+        if (loadingSubEl) loadingSubEl.textContent = '预计 10-30 秒';
 
         S.results = [{ url: videoResult.url, isVideo: true, duration: videoResult.duration }];
         showVideoResult(videoResult, prompt);
@@ -2428,8 +2435,10 @@ ${cameraSnippet}
           if (!compositeMain) { showToast('请先上传待抠图片', 'warning'); showLoading(false); return; }
 
           // 更新加载文案
-          $('loadingText').textContent = '智能抠图中，请稍候...';
-          $('loadingSub').textContent = '正在识别主体并移除背景';
+          const cutoutLoadingTextEl = $('loadingText');
+          const cutoutLoadingSubEl = $('loadingSub');
+          if (cutoutLoadingTextEl) cutoutLoadingTextEl.textContent = '智能抠图中，请稍候...';
+          if (cutoutLoadingSubEl) cutoutLoadingSubEl.textContent = '正在识别主体并移除背景';
 
           const imageBase64 = compositeMain;
 
@@ -2442,13 +2451,13 @@ ${cameraSnippet}
                 'succeeded': '处理完成',
                 'failed': '处理失败'
               };
-              $('loadingSub').textContent = statusMap[task.status] || `状态: ${task.status}`;
+              if (cutoutLoadingSubEl) cutoutLoadingSubEl.textContent = statusMap[task.status] || `状态: ${task.status}`;
             }
           });
 
           // 恢复加载文案
-          $('loadingText').textContent = '正在生成，请稍候...';
-          $('loadingSub').textContent = '预计 10-30 秒';
+          if (cutoutLoadingTextEl) cutoutLoadingTextEl.textContent = '正在生成，请稍候...';
+          if (cutoutLoadingSubEl) cutoutLoadingSubEl.textContent = '预计 10-30 秒';
           break;
         }
         case 'background': {
@@ -2602,8 +2611,10 @@ ${cameraSnippet}
     $('infoPanel')?.classList.toggle('hidden', on);
     const btn = $('btnGenerate'); if (btn) btn.disabled = on;
     if (on) {
-      $('loadingText').textContent = '正在生成，请稍候...';
-      $('loadingSub').textContent = S.tab === 'wan-video' ? '预计 1-5 分钟' : '预计 10-30 秒';
+      const lt = $('loadingText');
+      const ls = $('loadingSub');
+      if (lt) lt.textContent = '正在生成，请稍候...';
+      if (ls) ls.textContent = S.tab === 'wan-video' ? '预计 1-5 分钟' : '预计 10-30 秒';
     }
   }
 
